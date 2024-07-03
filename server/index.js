@@ -1,13 +1,21 @@
 const express=require('express')
 const mongoose=require('mongoose')
+require('dotenv').config();
+
 const routes=require('./routes/todorouter');
 const cors=require('cors')
 const app=express();
 app.use(express.json());
 app.use(cors());
-
-mongoose.connect("mongodb://127.0.0.1:27017/todolistmern").then(()=>console.log("connected to mongodb")).catch((err)=>console.log(err));
+const DB = process.env.DB;
+mongoose.connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Database connected successfully'))
+  .catch(err => console.error('Database connection error:', err));
 
 app.use(routes);
-app.listen(5000,()=>console.log("server started"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
